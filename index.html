@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Birthday Surprise</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* Countdown Styles */
+        #countdown {
+            display: block;
+        }
+        
+        .countdown-container {
+            margin-bottom: 30px;
+        }
+        
+        .countdown-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+            animation: neonGlow 1.5s infinite alternate;
+        }
+        
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .countdown-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 10px;
+            min-width: 80px;
+        }
+        
+        .countdown-label {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            color: #ff69b4;
+            text-shadow: 0 0 5px #ff69b4;
+        }
+        
+        /* Password Section */
+        #password-section {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .password-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+            animation: neonGlowGreen 1.5s infinite alternate;
+        }
+        
+        .password-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #00ff00;
+            border-radius: 30px;
+            padding: 15px 20px;
+            color: white;
+            font-size: 1rem;
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 15px;
+            outline: none;
+            text-align: center;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        
+        .password-submit {
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            border: none;
+            border-radius: 30px;
+            padding: 12px 30px;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+        }
+        
+        .password-submit:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.9);
+        }
+        
+        /* Gift Box Section */
+        #gift-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+        }
+        
+        .gift-title {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #ff69b4;
+            text-shadow: 0 0 10px #ff69b4, 0 0 20px #ff69b4;
+            animation: neonGlowPink 1.5s infinite alternate;
+        }
+        
+        .gift-box {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(45deg, #ff00ff, #ff69b4);
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 0 30px #ff00ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .gift-box:hover {
+            transform: scale(1.05);
+        }
+        
+        .gift-box::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(45deg, #ff00ff, #ff69b4);
+            top: -10px;
+            border-radius: 5px;
+        }
+        
+        .gift-box::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 5px;
+        }
+        
+        .gift-text {
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            z-index: 2;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+        }
+        
+        /* Sparkle Effect */
+        .sparkle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: #fff;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+        
+        /* 3D Photo Gallery */
+        #gallery-section {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            overflow: hidden;
+        }
+        
+        .gallery-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            animation: neonGlow 1.5s infinite alternate;
+        }
+        
+        .carousel {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            perspective: 1000px;
+            margin: 30px auto;
+        }
+        
+        .carousel-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+        }
+        
+        .carousel-photo {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            left: 50px;
+            top: 50px;
+            border: 5px solid #ff00ff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #ff00ff;
+            transition: all 0.5s;
+            cursor: pointer;
+            object-fit: cover;
+        }
+        
+        .carousel-photo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px #00ffff;
+        }
+        
+        .message-box {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            max-width: 80%;
+            color: #fff;
+            font-size: 1rem;
+            text-align: center;
+            box-shadow: 0 0 15px #00ff00;
+        }
+        
+        .feelings-btn {
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            border: none;
+            border-radius: 30px;
+            padding: 12px 30px;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+            margin-top: 30px;
+        }
+        
+        .feelings-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.9);
+        }
+        
+        /* Message Form */
+        #message-section {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            padding: 20px;
+        }
+        
+        .message-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #ff69b4;
+            text-shadow: 0 0 10px #ff69b4, 0 0 20px #ff69b4;
+            animation: neonGlowPink 1.5s infinite alternate;
+        }
+        
+        .message-form {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .message-textarea {
+            width: 100%;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            resize: none;
+            outline: none;
+            box-shadow: 0 0 15px #00ffff;
+        }
+        
+        .message-submit {
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            border: none;
+            border-radius: 30px;
+            padding: 12px 30px;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+        }
+        
+        .message-submit:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.9);
+        }
+        
+        /* Animations */
+        @keyframes neonGlow {
+            from {
+                text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+            }
+            to {
+                text-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff;
+            }
+        }
+        
+        @keyframes neonGlowGreen {
+            from {
+                text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+            }
+            to {
+                text-shadow: 0 0 15px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00;
+            }
+        }
+        
+        @keyframes neonGlowPink {
+            from {
+                text-shadow: 0 0 10px #ff69b4, 0 0 20px #ff69b4;
+            }
+            to {
+                text-shadow: 0 0 15px #ff69b4, 0 0 30px #ff69b4, 0 0 40px #ff69b4;
+            }
+        }
+        
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+            100% { transform: rotate(0deg); }
+        }
+        
+        .shake {
+            animation: shake 0.5s;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 480px) {
+            .countdown-title {
+                font-size: 1.5rem;
+            }
+            
+            .countdown-number {
+                font-size: 2rem;
+                min-width: 60px;
+            }
+            
+            .gift-box {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .carousel {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .carousel-photo {
+                width: 150px;
+                height: 150px;
+                left: 50px;
+                top: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Countdown Section -->
+    <div class="container">
+        <div id="countdown">
+            <div class="countdown-container">
+                <h1 class="countdown-title">Countdown to the Special Day</h1>
+                <div class="countdown">
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="days">00</div>
+                        <div class="countdown-label">Days</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="hours">00</div>
+                        <div class="countdown-label">Hours</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="minutes">00</div>
+                        <div class="countdown-label">Minutes</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="seconds">00</div>
+                        <div class="countdown-label">Seconds</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Password Section -->
+        <div id="password-section">
+            <h2 class="password-title">Enter the Secret Code</h2>
+            <input type="password" class="password-input" id="password-input" placeholder="Enter password">
+            <button class="password-submit" id="password-submit">Submit</button>
+        </div>
+        
+        <!-- Gift Box Section -->
+        <div id="gift-section">
+            <h2 class="gift-title">Click the Gift Box!</h2>
+            <div class="gift-box" id="gift-box">
+                <div class="gift-text">Click Me</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 3D Photo Gallery Section -->
+    <div id="gallery-section">
+        <h2 class="gallery-title">Special Memories</h2>
+        <div class="carousel">
+            <div class="carousel-container" id="carousel-container"></div>
+        </div>
+        <div class="message-box" id="photo-message"></div>
+        <button class="feelings-btn" id="feelings-btn">Share Your Feelings</button>
+    </div>
+    
+    <!-- Message Section -->
+    <div id="message-section">
+        <h2 class="message-title">Express Your Feelings</h2>
+        <form class="message-form" id="message-form">
+            <textarea class="message-textarea" id="message-text" placeholder="Write your message here..."></textarea>
+            <button type="submit" class="message-submit">Send Message</button>
+        </form>
+    </div>
+    
+    <audio id="greeting-audio"></audio>
+    <audio id="second-greeting-audio"></audio>
+    
+    <script>
+        // Countdown to May 29 at 00:00
+        const countdownDate = new Date('May 29, 2025 00:00:00').getTime();
+        
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+        
+        const countdownSection = document.getElementById('countdown');
+        const passwordSection = document.getElementById('password-section');
+        const giftSection = document.getElementById('gift-section');
+        const gallerySection = document.getElementById('gallery-section');
+        const messageSection = document.getElementById('message-section');
+        
+        const passwordInput = document.getElementById('password-input');
+        const passwordSubmit = document.getElementById('password-submit');
+        
+        const giftBox = document.getElementById('gift-box');
+        
+        const carouselContainer = document.getElementById('carousel-container');
+        const photoMessage = document.getElementById('photo-message');
+        const feelingsBtn = document.getElementById('feelings-btn');
+        
+        const messageForm = document.getElementById('message-form');
+        const messageText = document.getElementById('message-text');
+        
+        const greetingAudio = document.getElementById('greeting-audio');
+        const secondGreetingAudio = document.getElementById('second-greeting-audio');
+        
+        // Replace with your actual password
+        const correctPassword = "madampreru123";
+        
+        // Photo data with messages
+        const photos = [
+            { url: "photo1.jpg", message: "Your smile brightens my darkest days" },
+            { url: "photo2.jpg", message: "Every moment with you is special" },
+            { url: "photo3.jpg", message: "Your beauty takes my breath away" },
+            { url: "photo4.jpg", message: "I cherish every memory we've made" },
+            { url: "photo5.jpg", message: "You're the most amazing person I know" },
+            { url: "photo6.jpg", message: "My heart skips a beat when I see you" },
+            { url: "photo7.jpg", message: "You make life so much better" },
+            { url: "photo8.jpg", message: "I'm so lucky to have you in my life" },
+            { url: "photo9.jpg", message: "You're my favorite person in the world" },
+            { url: "photo10.jpg", message: "I love you more than words can say" }
+        ];
+        
+        // Update countdown every second
+        const countdown = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = countdownDate - now;
+            
+            if (distance <= 0) {
+                clearInterval(countdown);
+                countdownSection.style.display = 'none';
+                passwordSection.style.display = 'block';
+                return;
+            }
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            daysEl.textContent = days.toString().padStart(2, '0');
+            hoursEl.textContent = hours.toString().padStart(2, '0');
+            minutesEl.textContent = minutes.toString().padStart(2, '0');
+            secondsEl.textContent = seconds.toString().padStart(2, '0');
+        }, 1000);
+        
+        // Password submission
+        passwordSubmit.addEventListener('click', () => {
+            if (passwordInput.value === correctPassword) {
+                passwordSection.style.display = 'none';
+                giftSection.style.display = 'flex';
+                
+                // Play greeting audio (replace with your audio file)
+                greetingAudio.src = "greeting.mp3";
+                greetingAudio.play();
+            } else {
+                alert("Wrong password! Try again.");
+                passwordInput.value = '';
+            }
+        });
+        
+        // Gift box click event
+        giftBox.addEventListener('click', () => {
+            // Shake animation
+            giftBox.classList.add('shake');
+            
+            // Create sparkles
+            createSparkles();
+            
+            // After animation, show gallery
+            setTimeout(() => {
+                giftBox.classList.remove('shake');
+                giftSection.style.display = 'none';
+                initGallery();
+                gallerySection.style.display = 'flex';
+                
+                // Play background music (replace with your audio file)
+                greetingAudio.src = "background-music.mp3";
+                greetingAudio.loop = true;
+                greetingAudio.play();
+            }, 1000);
+        });
+        
+        // Create sparkle effect
+        function createSparkles() {
+            for (let i = 0; i < 50; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.classList.add('sparkle');
+                
+                // Random position
+                const x = Math.random() * giftBox.offsetWidth;
+                const y = Math.random() * giftBox.offsetHeight;
+                
+                sparkle.style.left = `${x}px`;
+                sparkle.style.top = `${y}px`;
+                
+                // Random size
+                const size = Math.random() * 8 + 2;
+                sparkle.style.width = `${size}px`;
+                sparkle.style.height = `${size}px`;
+                
+                // Random color
+                const colors = ['#ff00ff', '#00ffff', '#ffff00', '#ff69b4', '#00ff00'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                sparkle.style.backgroundColor = color;
+                
+                giftBox.appendChild(sparkle);
+                
+                // Animate sparkle
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 5 + 5;
+                const xVelocity = Math.cos(angle) * velocity;
+                const yVelocity = Math.sin(angle) * velocity;
+                
+                let opacity = 1;
+                let posX = x;
+                let posY = y;
+                
+                const animateSparkle = () => {
+                    opacity -= 0.02;
+                    posX += xVelocity;
+                    posY += yVelocity;
+                    
+                    sparkle.style.opacity = opacity;
+                    sparkle.style.left = `${posX}px`;
+                    sparkle.style.top = `${posY}px`;
+                    
+                    if (opacity > 0) {
+                        requestAnimationFrame(animateSparkle);
+                    } else {
+                        sparkle.remove();
+                    }
+                };
+                
+                setTimeout(() => {
+                    animateSparkle();
+                }, Math.random() * 300);
+            }
+        }
+        
+        // Initialize 3D photo gallery
+        function initGallery() {
+            carouselContainer.innerHTML = '';
+            
+            photos.forEach((photo, index) => {
+                const img = document.createElement('img');
+                img.src = photo.url;
+                img.alt = `Photo ${index + 1}`;
+                img.classList.add('carousel-photo');
+                img.dataset.message = photo.message;
+                
+                // Position photos in a 3D circle
+                const angle = (index / photos.length) * Math.PI * 2;
+                const radius = 150;
+                const x = Math.sin(angle) * radius;
+                const z = Math.cos(angle) * radius;
+                
+                img.style.transform = `rotateY(${angle}rad) translateZ(${z}px) translateX(${x}px)`;
+                
+                // Click event to show message
+                img.addEventListener('click', () => {
+                    photoMessage.textContent = photo.message;
+                    photoMessage.style.display = 'block';
+                });
+                
+                carouselContainer.appendChild(img);
+            });
+            
+            // Add rotation on touch/mouse move
+            let isDragging = false;
+            let startX, startY;
+            let rotationY = 0;
+            let rotationX = 0;
+            
+            carouselContainer.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+            });
+            
+            carouselContainer.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                e.preventDefault();
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                
+                const deltaX = e.clientX - startX;
+                const deltaY = e.clientY - startY;
+                
+                rotationY += deltaX * 0.01;
+                rotationX -= deltaY * 0.005;
+                
+                carouselContainer.style.transform = `rotateY(${rotationY}rad) rotateX(${rotationX}rad)`;
+                
+                startX = e.clientX;
+                startY = e.clientY;
+            });
+            
+            document.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                
+                const deltaX = e.touches[0].clientX - startX;
+                const deltaY = e.touches[0].clientY - startY;
+                
+                rotationY += deltaX * 0.01;
+                rotationX -= deltaY * 0.005;
+                
+                carouselContainer.style.transform = `rotateY(${rotationY}rad) rotateX(${rotationX}rad)`;
+                
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                e.preventDefault();
+            });
+            
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+            
+            document.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+        }
+        
+        // Feelings button click
+        feelingsBtn.addEventListener('click', () => {
+            gallerySection.style.display = 'none';
+            messageSection.style.display = 'flex';
+        });
+        
+        // Message form submission
+        messageForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const message = messageText.value.trim();
+            
+            if (message) {
+                // Send message to Google Sheets
+                sendToGoogleSheets(message);
+                
+                // Show thank you message
+                alert("Thank you for your message!");
+                
+                // Play second greeting audio
+                secondGreetingAudio.src = "second-greeting.mp3";
+                secondGreetingAudio.play();
+                
+                // Open YouTube playlist (replace with your playlist URL)
+                setTimeout(() => {
+                    window.open("https://youtube.com/playlist?list=PLHwBSxFUhwvXXeS7LdjfEF3xAbuw4w6lv&si=PhRP2ZTu6wD0nTlq", "_blank");
+                }, 2000);
+            }
+        });
+        
+        // Function to send data to Google Sheets
+        function sendToGoogleSheets(message) {
+            // Replace with your Google Apps Script Web App URL
+            const scriptUrl = "https://script.google.com/macros/s/AKfycbzcgiQLRHhWNf0Vk7LWd6gRBo2QvDSFH5if90yQhV1RgBEMcU98jfNUVq3x0PGwkUoz7g/exec";
+            
+            const data = {
+                message: message,
+                timestamp: new Date().toISOString()
+            };
+            
+            fetch(scriptUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(data)
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
